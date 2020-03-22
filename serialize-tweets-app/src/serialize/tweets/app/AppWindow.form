@@ -108,7 +108,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="tweetsAmountLabel" pref="26" max="32767" attributes="0"/>
+                  <Component id="tweetsAmountLabel" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="tweetsAmountSlider" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -118,8 +118,10 @@
       <SubComponents>
         <Component class="javax.swing.JSlider" name="tweetsAmountSlider">
           <Properties>
-            <Property name="majorTickSpacing" type="int" value="50"/>
+            <Property name="majorTickSpacing" type="int" value="199"/>
             <Property name="maximum" type="int" value="200"/>
+            <Property name="minimum" type="int" value="1"/>
+            <Property name="minorTickSpacing" type="int" value="50"/>
             <Property name="paintLabels" type="boolean" value="true"/>
             <Property name="paintTicks" type="boolean" value="true"/>
             <Property name="value" type="int" value="1"/>
@@ -134,6 +136,7 @@
               <Font name="Tahoma" size="18" style="0"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="text" type="java.lang.String" value="1"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
@@ -183,11 +186,13 @@
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="outputButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="radioButtonXML" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="turtleRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="outputPathField" alignment="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="outputButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="radioButtonXML" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="turtleRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

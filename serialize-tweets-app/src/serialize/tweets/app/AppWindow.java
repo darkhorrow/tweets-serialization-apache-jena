@@ -2,13 +2,27 @@ package serialize.tweets.app;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import javax.swing.AbstractButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import org.apache.jena.rdf.model.Model;
 
 public class AppWindow extends javax.swing.JFrame {
+    
+    private TweetConversor conversor;
 
-    public AppWindow() {
+    public AppWindow(TweetConversor conversor) {
+        this.conversor = conversor;
         initComponents();
+        
+        Hashtable<Integer, JLabel> labels = new Hashtable<>();
+        labels.put(1, new JLabel("1"));
+        labels.put(50, new JLabel("50"));
+        labels.put(100, new JLabel("100"));
+        labels.put(150, new JLabel("150"));
+        labels.put(200, new JLabel("200"));
+        tweetsAmountSlider.setLabelTable(labels);
     }
 
     @SuppressWarnings("unchecked")
@@ -47,8 +61,10 @@ public class AppWindow extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Nº of tweets"));
 
-        tweetsAmountSlider.setMajorTickSpacing(50);
+        tweetsAmountSlider.setMajorTickSpacing(199);
         tweetsAmountSlider.setMaximum(200);
+        tweetsAmountSlider.setMinimum(1);
+        tweetsAmountSlider.setMinorTickSpacing(50);
         tweetsAmountSlider.setPaintLabels(true);
         tweetsAmountSlider.setPaintTicks(true);
         tweetsAmountSlider.setValue(1);
@@ -60,6 +76,7 @@ public class AppWindow extends javax.swing.JFrame {
 
         tweetsAmountLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tweetsAmountLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tweetsAmountLabel.setText("1");
         tweetsAmountLabel.setToolTipText("");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -78,7 +95,7 @@ public class AppWindow extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(tweetsAmountLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                .addComponent(tweetsAmountLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tweetsAmountSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -135,11 +152,12 @@ public class AppWindow extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(outputButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(radioButtonXML)
-                    .addComponent(turtleRadioButton)
-                    .addComponent(outputPathField))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(outputPathField)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(outputButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(radioButtonXML)
+                        .addComponent(turtleRadioButton)))
                 .addContainerGap())
         );
 
@@ -217,6 +235,8 @@ public class AppWindow extends javax.swing.JFrame {
                 break;
             }
         }
+        
+        Model model = conversor.toRDF(query, tweetsAmount);
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void submitButtonCheck() {
