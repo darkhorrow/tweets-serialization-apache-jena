@@ -1,5 +1,8 @@
 package serialize.tweets.app;
 
+import java.io.File;
+import java.util.Enumeration;
+import javax.swing.AbstractButton;
 import javax.swing.JFileChooser;
 
 public class AppWindow extends javax.swing.JFrame {
@@ -142,6 +145,11 @@ public class AppWindow extends javax.swing.JFrame {
 
         submitButton.setText("Serialize tweets");
         submitButton.setEnabled(false);
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -195,6 +203,21 @@ public class AppWindow extends javax.swing.JFrame {
     private void searchFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_searchFieldCaretUpdate
         submitButtonCheck();
     }//GEN-LAST:event_searchFieldCaretUpdate
+
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        int tweetsAmount = tweetsAmountSlider.getValue();
+        File output = new File(outputPathField.getText());
+        String query = searchField.getText();
+        String format = null;
+        Enumeration<AbstractButton> buttons = formatGroupButton.getElements();
+        while(buttons.hasMoreElements()) {
+            AbstractButton button = buttons.nextElement();
+            if(button.isSelected()) {
+                format = button.getText();
+                break;
+            }
+        }
+    }//GEN-LAST:event_submitButtonActionPerformed
 
     private void submitButtonCheck() {
         if(tweetsAmountSlider.getValue() > 0 && 
