@@ -19,6 +19,7 @@ public class SerializeTweetsApp {
 
     public static void main(String[] args) {
         
+        /*
         BasicConfigurator.configure();
         
         ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -39,6 +40,7 @@ public class SerializeTweetsApp {
             System.out.println("Failed to search tweets: " + te.getMessage());
             System.exit(-1);
         }
+        */
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

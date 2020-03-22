@@ -36,6 +36,11 @@ public class AppWindow extends javax.swing.JFrame {
         jLabel1.setText("Tweets Serializator");
 
         searchField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        searchField.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                searchFieldCaretUpdate(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Nº of tweets"));
 
@@ -176,6 +181,7 @@ public class AppWindow extends javax.swing.JFrame {
     private void tweetsAmountSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tweetsAmountSliderStateChanged
         Integer tweetsAmount = tweetsAmountSlider.getValue();
         tweetsAmountLabel.setText(tweetsAmount.toString());
+        submitButtonCheck();
     }//GEN-LAST:event_tweetsAmountSliderStateChanged
 
     private void outputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputButtonActionPerformed
@@ -183,8 +189,23 @@ public class AppWindow extends javax.swing.JFrame {
         if(fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             outputPathField.setText(fc.getSelectedFile().getAbsolutePath());
         }
+        submitButtonCheck();
     }//GEN-LAST:event_outputButtonActionPerformed
 
+    private void searchFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_searchFieldCaretUpdate
+        submitButtonCheck();
+    }//GEN-LAST:event_searchFieldCaretUpdate
+
+    private void submitButtonCheck() {
+        if(tweetsAmountSlider.getValue() > 0 && 
+                !outputPathField.getText().equals("") && 
+                !searchField.getText().equals("")) {
+            submitButton.setEnabled(true);
+        } else {
+            submitButton.setEnabled(false);
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup formatGroupButton;
     private javax.swing.JLabel jLabel1;
