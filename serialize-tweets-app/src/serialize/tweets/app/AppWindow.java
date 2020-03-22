@@ -6,7 +6,10 @@ import java.util.Hashtable;
 import javax.swing.AbstractButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
 
 public class AppWindow extends javax.swing.JFrame {
     
@@ -237,6 +240,7 @@ public class AppWindow extends javax.swing.JFrame {
         }
         
         Model model = conversor.toRDF(query, tweetsAmount);
+        RDFDataMgr.write(System.out, model, RDFFormat.RDFXML);
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void submitButtonCheck() {

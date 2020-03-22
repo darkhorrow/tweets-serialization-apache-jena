@@ -23,3 +23,7 @@
 hs_err_pid*
 /serialize-tweets-app/nbproject/private/
 /serialize-tweets-app/build/
+
+# Twitter keys file
+
+*/mykeys.properties
