@@ -26,4 +26,4 @@ hs_err_pid*
 
 # Twitter keys file
 
-*/mykeys.properties
+/serialize-tweets-app/src/serialize/tweets/app/mykeys.properties
