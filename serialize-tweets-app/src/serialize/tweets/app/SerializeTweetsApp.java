@@ -1,8 +1,6 @@
 package serialize.tweets.app;
 
-import java.io.FileNotFoundException;
 import java.util.Map;
-import java.util.Properties;
 import org.apache.log4j.BasicConfigurator;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;

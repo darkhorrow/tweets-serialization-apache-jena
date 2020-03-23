@@ -6,11 +6,12 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import javax.swing.JOptionPane;
 
 public class PropertyFileReader {
     
     InputStream inputStream;
-    private final String propFileName = "mykeys.properties";
+    private final String propFileName = "config.properties";
 
     public Map<String, String> getProperties() {
         try {
@@ -40,6 +41,9 @@ public class PropertyFileReader {
             return propertiesMap;
         } catch (IOException e) {
             System.out.println("Error reading properties: " + e);
+            JOptionPane.showMessageDialog(null, "Properties file "
+                    + "could not be found.");
+            System.exit(-1);
         } finally {
             try {
                 inputStream.close();

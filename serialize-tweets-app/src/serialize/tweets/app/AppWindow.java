@@ -1,24 +1,28 @@
 package serialize.tweets.app;
 
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.swing.AbstractButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import org.apache.jena.graph.Graph;
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 
 public class AppWindow extends javax.swing.JFrame {
-    
-    private TweetConversor conversor;
+
+    private final TweetConversor conversor;
 
     public AppWindow(TweetConversor conversor) {
         this.conversor = conversor;
         initComponents();
-        
+
         Hashtable<Integer, JLabel> labels = new Hashtable<>();
         labels.put(1, new JLabel("1"));
         labels.put(50, new JLabel("50"));
@@ -46,6 +50,9 @@ public class AppWindow extends javax.swing.JFrame {
         radioButtonXML = new javax.swing.JRadioButton();
         turtleRadioButton = new javax.swing.JRadioButton();
         submitButton = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        classField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tweets Serializator");
@@ -121,7 +128,7 @@ public class AppWindow extends javax.swing.JFrame {
 
         formatGroupButton.add(radioButtonXML);
         radioButtonXML.setSelected(true);
-        radioButtonXML.setText("RDF/XML");
+        radioButtonXML.setText("RDFXML");
 
         formatGroupButton.add(turtleRadioButton);
         turtleRadioButton.setText("Turtle");
@@ -172,6 +179,17 @@ public class AppWindow extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setText("Search:");
+
+        jLabel5.setText("Topic/subject of the search:");
+
+        classField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        classField.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                classFieldCaretUpdate(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -182,10 +200,13 @@ public class AppWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(searchField)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(classField))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -193,13 +214,19 @@ public class AppWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(classField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(submitButton)
                 .addContainerGap())
         );
 
@@ -225,39 +252,96 @@ public class AppWindow extends javax.swing.JFrame {
         submitButtonCheck();
     }//GEN-LAST:event_searchFieldCaretUpdate
 
+    private void classFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_classFieldCaretUpdate
+        submitButtonCheck();
+    }//GEN-LAST:event_classFieldCaretUpdate
+
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        int tweetsAmount = tweetsAmountSlider.getValue();
-        File output = new File(outputPathField.getText());
-        String query = searchField.getText();
-        String format = null;
-        Enumeration<AbstractButton> buttons = formatGroupButton.getElements();
-        while(buttons.hasMoreElements()) {
-            AbstractButton button = buttons.nextElement();
-            if(button.isSelected()) {
-                format = button.getText();
-                break;
+        submitButton.setText("Serializing...");
+        SwingWorker worker = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                saveRDFModel();
+                submitButton.setText("Serialize tweets");
+                return null;
             }
-        }
-        
-        Model model = conversor.toRDF(query, tweetsAmount);
-        RDFDataMgr.write(System.out, model, RDFFormat.RDFXML);
+        };
+        worker.execute();     
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void submitButtonCheck() {
-        if(tweetsAmountSlider.getValue() > 0 && 
-                !outputPathField.getText().equals("") && 
-                !searchField.getText().equals("")) {
+        if(tweetsAmountSlider.getValue() > 0
+                && !outputPathField.getText().equals("")
+                && !searchField.getText().equals("")
+                && !classField.getText().equals("")) {
             submitButton.setEnabled(true);
         } else {
             submitButton.setEnabled(false);
         }
     }
     
+    private void saveRDFModel() {
+        OutputStream outStream = null;
+        try {
+            int tweetsAmount = tweetsAmountSlider.getValue();
+            String query = searchField.getText();
+            String topic = classField.getText();
+            Enumeration<AbstractButton> buttons = formatGroupButton.getElements();
+            RDFFormat outputFormat = RDFFormat.RDFXML_PRETTY;
+            String outputExtension = ".rdf";
+
+            while(buttons.hasMoreElements()) {
+                AbstractButton button = buttons.nextElement();
+                if(button.isSelected()) {
+                    switch(button.getText().toLowerCase()) {
+                        case "rdfxml":
+                        outputFormat = RDFFormat.RDFXML_PRETTY;
+                        outputExtension = ".rdf";
+                        break;
+                        case "turtle":
+                        outputFormat = RDFFormat.TURTLE_PRETTY;
+                        outputExtension = ".ttl";
+                        break;
+                        default:
+                        break;
+                    }
+                    break;
+                }
+            }
+
+            if(outputPathField.getText().endsWith(outputExtension)){
+                outStream = new FileOutputStream(outputPathField.getText());
+            } else {
+                outStream = new FileOutputStream(outputPathField.getText() +
+                    outputExtension);
+            }
+
+            
+            Model model = conversor.toRDF(query, topic, tweetsAmount);
+            RDFDataMgr.write(outStream, model, outputFormat);
+        } catch (FileNotFoundException ex) {
+            System.out.println("Couldn´t create the file: " + ex);
+            JOptionPane.showMessageDialog(null, "Cannot create the output file."
+                    + " Check the permissions of the directory.");
+        } finally {
+            try {
+                if(outStream != null) {
+                    outStream.close();
+                }
+            } catch(IOException ex) {
+                System.out.println("OutputStream error: " + ex);
+            }
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField classField;
     private javax.swing.ButtonGroup formatGroupButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton outputButton;
